@@ -13,9 +13,13 @@ const port = portenv ? parseInt(portenv) : 8000;
 const handler = async (_request: Request): Promise<Response> => {
   let mergedJson = {};
   for (const endpoint of endpoints) {
-    const resp = await fetch(endpoint);
-    const respJson = await resp.json();
-    mergedJson = deepMerge(mergedJson, respJson);
+    try {
+      const resp = await fetch(endpoint);
+      const respJson = await resp.json();
+      mergedJson = deepMerge(mergedJson, respJson);
+    } catch(e) {
+      console.error(e)
+    }
   }
 
   return new Response(JSON.stringify(mergedJson), {
